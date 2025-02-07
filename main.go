@@ -9,32 +9,35 @@ type account struct {
 }
 
 func main() {
+	str := []rune("Привет!:)")
+	for _, ch := range string(str){
+		fmt.Println(ch)
+	}
+
+
+
 	login := promptData("Введите логин")
 	password := promptData("Введите пароль")
 	url := promptData("Введите URL")
 
-	outputPassword(login, password, url)
-
-	// account1 := account{
-	// 	login,
-	// 	password,
-	// 	url,
-	// }
-	account1 := account{
+	myAccount := account{
 		password: password,
 		url: url,
 		login: login,
 	}
+
+	outputPassword(&myAccount)
 }
 
 
 func promptData(prompt string) string {
-	fmt.Print(prompt)
+	fmt.Print(prompt + ": ")
 	var result string
 	fmt.Scan(&result)
 	return result
 }
 
-func outputPassword(login, password, URL string) {
-	fmt.Println()
+func outputPassword(acc *account) {
+	fmt.Println(acc.login, acc.password, acc.url)
+	fmt.Println(*acc)
 }
