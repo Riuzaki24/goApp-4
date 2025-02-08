@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand/v2"
+)
 
 type account struct {
 	login string
@@ -8,12 +11,10 @@ type account struct {
 	url string
 }
 
-func main() {
-	str := []rune("Привет!:)")
-	for _, ch := range string(str){
-		fmt.Println(ch)
-	}
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGJIKLMNOPQRSRUVWXYZ1234567890-*!")
 
+func main() {
+	fmt.Println(generatePassword(12))
 
 
 	login := promptData("Введите логин")
@@ -40,4 +41,14 @@ func promptData(prompt string) string {
 func outputPassword(acc *account) {
 	fmt.Println(acc.login, acc.password, acc.url)
 	fmt.Println(*acc)
+}
+
+
+// Данная функция создает массив rune result, длины n, цикл for проходится по result, получая индекс(i) и записывая туда на каджый шаг символ letterRunes[rand.IntN(len(letterRunes))](берет случайный индекс из letterRunes)  
+func generatePassword(n int) string {
+	result := make([]rune, n)
+	for i := range result {
+		result[i] = letterRunes[rand.IntN(len(letterRunes))]
+	} 
+	return string(result)
 }
