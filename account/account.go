@@ -1,7 +1,6 @@
 package account
 
 import (
-	"encoding/json"
 	"errors"
 	"math/rand/v2"
 	"net/url"
@@ -11,25 +10,16 @@ import (
 )
 
 type Account struct {
-	Login     string `json:"login"`
-	Password  string	`json:"password"`
-	Url       string	`json:"url"`
+	Login     string    `json:"login"`
+	Password  string    `json:"password"`
+	Url       string    `json:"url"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-
 }
 
 func (acc *Account) OutputPassword() {
 	color.Cyan(acc.Login)
 	// fmt.Println(acc.login, acc.password, acc.url)
-}
-
-func (acc *Account) ToBytes() ([]byte, error){
-	file, err := json.Marshal(acc)
-	if err != nil {
-		return nil, err
-	} 
-	return file, nil
 }
 
 // Данная функция создает массив rune result, длины n, цикл for проходится по result, получая индекс(i) и записывая туда на каджый шаг символ letterRunes[rand.IntN(len(letterRunes))](берет случайный индекс из letterRunes)
@@ -46,6 +36,7 @@ func NewAccount(login, password, urlString string) (*Account, error) {
 		return nil, errors.New("INVALID_LOGIN")
 	}
 	_, err := url.ParseRequestURI(urlString)
+
 	if err != nil {
 		return nil, errors.New("INVALID_URL")
 	}
@@ -53,10 +44,9 @@ func NewAccount(login, password, urlString string) (*Account, error) {
 
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-			Url:      urlString,
-			Login:    login,
-			Password: password,
-		
+		Url:       urlString,
+		Login:     login,
+		Password:  password,
 	}
 
 	if password == "" {
