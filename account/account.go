@@ -1,6 +1,7 @@
 package account
 
 import (
+	"encoding/json"
 	"errors"
 	"math/rand/v2"
 	"net/url"
@@ -10,20 +11,25 @@ import (
 )
 
 type Account struct {
-	login    string
-	password string
-	url      string
-}
+	Login     string `json:"login"`
+	Password  string	`json:"password"`
+	Url       string	`json:"url"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 
-type AccountWithTimeStamp struct {
-	createdAt time.Time
-	updatedAt time.Time
-	Account
 }
 
 func (acc *Account) OutputPassword() {
-	color.Cyan(acc.login)
+	color.Cyan(acc.Login)
 	// fmt.Println(acc.login, acc.password, acc.url)
+}
+
+func (acc *Account) ToBytes() ([]byte, error){
+	file, err := json.Marshal(acc)
+	if err != nil {
+		return nil, err
+	} 
+	return file, nil
 }
 
 // Данная функция создает массив rune result, длины n, цикл for проходится по result, получая индекс(i) и записывая туда на каджый шаг символ letterRunes[rand.IntN(len(letterRunes))](берет случайный индекс из letterRunes)
@@ -32,10 +38,10 @@ func (acc *Account) generatePassword(n int) {
 	for i := range result {
 		result[i] = letterRunes[rand.IntN(len(letterRunes))]
 	}
-	acc.password = string(result)
+	acc.Password = string(result)
 }
 
-func NewAccountWithTimesStamp(login, password, urlString string) (*AccountWithTimeStamp, error) {
+func NewAccount(login, password, urlString string) (*Account, error) {
 	if login == "" {
 		return nil, errors.New("INVALID_LOGIN")
 	}
@@ -43,15 +49,14 @@ func NewAccountWithTimesStamp(login, password, urlString string) (*AccountWithTi
 	if err != nil {
 		return nil, errors.New("INVALID_URL")
 	}
-	newAcc := &AccountWithTimeStamp{
+	newAcc := &Account{
 
-		createdAt: time.Now(),
-		updatedAt: time.Now(),
-		Account: Account{
-			url:      urlString,
-			login:    login,
-			password: password,
-		},
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+			Url:      urlString,
+			Login:    login,
+			Password: password,
+		
 	}
 
 	if password == "" {
