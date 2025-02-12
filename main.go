@@ -56,13 +56,7 @@ func createAccount() {
 
 	vault := account.NewVault()
 	vault.AddAccount(*myAccount)
-	data, err := vault.ToBytes()
-
-	if err != nil {
-		fmt.Println("Не удалось преобразовать в JSON")
-		return
-	}
-	files.WriteFile(data, "data.json")
+	vault.
 }
 
 func promptData(prompt string) string {
