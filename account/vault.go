@@ -57,6 +57,7 @@ func (vault *Vault) DeleteAccountsByUrl(url string) bool {
 		}
 		isDeleted = true
 	}
+	vault.Accounts = accounts
 	vault.save()
 	return isDeleted
 }
