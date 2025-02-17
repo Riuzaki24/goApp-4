@@ -2,22 +2,24 @@ package main
 
 import (
 	"app-4/account"
-	"app-4/files"
 	"fmt"
+
+	"github.com/fatih/color"
 )
 
 func main() {
 	fmt.Println("Приложение паролей")
-	Menu:
+	vault := account.NewVault()
+Menu:
 	for {
 		variant := getMenu()
 		switch variant {
 		case 1:
-			createAccount()
+			createAccount(vault)
 		case 2:
-			findAccount()
+			findAccount(vault)
 		case 3:
-			deleteAccount()
+			deleteAccount(vault)
 		default:
 			break Menu
 		}
@@ -36,15 +38,29 @@ func getMenu() int {
 	return variant
 }
 
-func findAccount() {
+func findAccount(vault *account.Vault) {
+	url := promptData("Введите URL для поиска")
+	accounts := vault.FindAccountsByUrl(url)
+	if len(accounts) == 0 {
+		color.Red("Аккаунтов не найдено")
+	}
+	for _, account := range accounts {
+		account.Output()
+	}
+}
+
+func deleteAccount(vault *account.Vault) {
+	url := promptData("Введите URL для удаления")
+	isDeleted := vault.DeleteAccountsByUrl(url)
+	if isDeleted {
+		color.Green("удалено")
+	} else {
+		color.Red("Не найдено")
+	}
 
 }
 
-func deleteAccount() {
-
-}
-
-func createAccount() {
+func createAccount(vault *account.Vault) {
 	login := promptData("Введите логин")
 	password := promptData("Введите пароль")
 	url := promptData("Введите URL")
@@ -54,9 +70,7 @@ func createAccount() {
 		return
 	}
 
-	vault := account.NewVault()
 	vault.AddAccount(*myAccount)
-	vault.
 }
 
 func promptData(prompt string) string {

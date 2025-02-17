@@ -17,9 +17,11 @@ type Account struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func (acc *Account) OutputPassword() {
+func (acc *Account) Output() {
 	color.Cyan(acc.Login)
-	// fmt.Println(acc.login, acc.password, acc.url)
+	color.Cyan(acc.Password)
+	color.Cyan(acc.Url)
+	// fmt.Println(acc.Login, acc.Password, acc.Url)
 }
 
 // Данная функция создает массив rune result, длины n, цикл for проходится по result, получая индекс(i) и записывая туда на каджый шаг символ letterRunes[rand.IntN(len(letterRunes))](берет случайный индекс из letterRunes)
