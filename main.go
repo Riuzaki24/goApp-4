@@ -38,6 +38,28 @@ func getMenu() int {
 	return variant
 }
 
+
+func promptData(prompt string) string {
+	fmt.Print(prompt + ": ")
+	var result string
+	fmt.Scanln(&result)
+	return result
+}
+
+func createAccount(vault *account.Vault) {
+	login := promptData("Введите логин")
+	password := promptData("Введите пароль")
+	url := promptData("Введите URL")
+	myAccount, err := account.NewAccount(login, password, url)
+	if err != nil {
+		fmt.Println("Неверный формат URL или Login")
+		return
+	}
+
+	vault.AddAccount(*myAccount)
+}
+
+
 func findAccount(vault *account.Vault) {
 	url := promptData("Введите URL для поиска")
 	accounts := vault.FindAccountsByUrl(url)
@@ -60,22 +82,5 @@ func deleteAccount(vault *account.Vault) {
 
 }
 
-func createAccount(vault *account.Vault) {
-	login := promptData("Введите логин")
-	password := promptData("Введите пароль")
-	url := promptData("Введите URL")
-	myAccount, err := account.NewAccount(login, password, url)
-	if err != nil {
-		fmt.Println("Неверный формат URL или Login")
-		return
-	}
 
-	vault.AddAccount(*myAccount)
-}
 
-func promptData(prompt string) string {
-	fmt.Print(prompt + ": ")
-	var result string
-	fmt.Scanln(&result)
-	return result
-}

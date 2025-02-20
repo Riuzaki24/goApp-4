@@ -15,7 +15,8 @@ type Vault struct {
 }
 
 func NewVault() *Vault {
-	file, err := files.ReadFile("data.json")
+	db := files.NewJsoonDb("data.json")
+	file, err := db.Read()
 	if err != nil {
 		return &Vault{
 			Accounts:  []Account{},
@@ -32,6 +33,11 @@ func NewVault() *Vault {
 		}
 	}
 	return &vault
+}
+
+func (vault *Vault) AddAccount(acc Account) {
+	vault.Accounts = append(vault.Accounts, acc)
+	vault.save()
 }
 
 func (vault *Vault) FindAccountsByUrl(url string) []Account {
@@ -62,10 +68,7 @@ func (vault *Vault) DeleteAccountsByUrl(url string) bool {
 	return isDeleted
 }
 
-func (vault *Vault) AddAccount(acc Account) {
-	vault.Accounts = append(vault.Accounts, acc)
-	vault.save()
-}
+
 
 func (vault *Vault) ToBytes() ([]byte, error) {
 	file, err := json.Marshal(vault)
@@ -82,5 +85,6 @@ func (vault *Vault) save() {
 	if err != nil {
 		color.Red("Не удалось преобразовать")
 	}
-	files.WriteFile(data, "data.json")
+	db := files.NewJsoonDb("data.json")
+	db.Write(data)
 }

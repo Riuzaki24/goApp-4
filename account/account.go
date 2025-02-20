@@ -24,7 +24,7 @@ func (acc *Account) Output() {
 	// fmt.Println(acc.Login, acc.Password, acc.Url)
 }
 
-// Данная функция создает массив rune result, длины n, цикл for проходится по result, получая индекс(i) и записывая туда на каджый шаг символ letterRunes[rand.IntN(len(letterRunes))](берет случайный индекс из letterRunes)
+
 func (acc *Account) generatePassword(n int) {
 	result := make([]rune, n)
 	for i := range result {
