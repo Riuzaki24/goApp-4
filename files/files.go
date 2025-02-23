@@ -9,7 +9,7 @@ type JsonDb struct {
 	fileName string
 }
 
-func NewJsoonDb(name string) *JsonDb{
+func NewJsonDb(name string) *JsonDb{
 	return &JsonDb{
 		fileName: name,
 	}
