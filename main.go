@@ -2,6 +2,7 @@ package main
 
 import (
 	"app-4/account"
+	"app-4/cloud"
 	"app-4/files"
 	"fmt"
 
@@ -10,7 +11,8 @@ import (
 
 func main() {
 	fmt.Println("Приложение паролей")
-	vault := account.NewVault(files.NewJsonDb("data.json"))
+	// vault := account.NewVault(files.NewJsonDb("data.json"))
+	vault := account.NewVault(cloud.NewCloudDb("https://a.ru"))
 Menu:
 	for {
 		variant := getMenu()
