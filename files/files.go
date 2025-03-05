@@ -19,10 +19,9 @@ func NewJsonDb(name string) *JsonDb{
 func (db *JsonDb) Read() ([]byte, error) {
 	data, err := os.ReadFile(db.fileName)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
-		return data, err
+		return data, nil
 }
 
 func (db *JsonDb) Write(content []byte) {

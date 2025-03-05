@@ -2,7 +2,7 @@ package main
 
 import (
 	"app-4/account"
-	"app-4/cloud"
+	"app-4/files"
 	"app-4/output"
 	"fmt"
 
@@ -11,11 +11,11 @@ import (
 
 func main() {
 	fmt.Println("Приложение паролей")
-	// vault := account.NewVault(files.NewJsonDb("data.json"))
-	vault := account.NewVault(cloud.NewCloudDb("https://a.ru"))
+	vault := account.NewVault(files.NewJsonDb("data.json"))
+	// vault := account.NewVault(cloud.NewCloudDb("https://a.ru")) 
 Menu:
 	for {
-		variant := promptData([]string {
+		variant := promptData([]string{
 			"1. Создать аккаунт",
 			"2. Найти аккаунт",
 			"3. Удалить аккаунт",
@@ -36,7 +36,6 @@ Menu:
 
 }
 
-
 func createAccount(vault *account.VaultWithDb) {
 	login := promptData([]string{"Введите логин"})
 	password := promptData([]string{"Введите пароль"})
@@ -46,7 +45,7 @@ func createAccount(vault *account.VaultWithDb) {
 		output.PrintError("Неверный формат URL или Login")
 		return
 	}
-	
+
 	vault.AddAccount(*myAccount)
 }
 
@@ -66,23 +65,23 @@ func deleteAccount(vault *account.VaultWithDb) {
 	isDeleted := vault.DeleteAccountsByUrl(url)
 	if isDeleted {
 		color.Green("удалено")
+	} else {
+		output.PrintError("Не найдено")
+	}
+
+}
+
+// func принимает slice любого типа
+// Выводит строкой каждый элемент, a последний = Printf добавляя :
+func promptData[T any](prompt []T) string {
+	for i, line := range prompt {
+		if i == len(prompt)-1 {
+			fmt.Printf("%v: ", line)
 		} else {
-			output.PrintError("Не найдено")
+			fmt.Println(line)
 		}
-		
 	}
-	
-	// func принимает slice любого типа
-	// Выводит строкой каждый элемент, a последний = Printf добавляя :
-	func promptData[T any](prompt []T) string {
-		for i, line := range prompt {
-			if i == len(prompt) - 1 {
-				fmt.Printf("%v: ", line)
-			} else {
-				fmt.Println(line)
-			}
-		}
-		var result string
-		fmt.Scanln(&result)
-		return result
-	}
+	var result string
+	fmt.Scanln(&result)
+	return result
+}

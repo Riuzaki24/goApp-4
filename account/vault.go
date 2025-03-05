@@ -33,7 +33,7 @@ func NewVault(db Db) *VaultWithDb {
 	file, err := db.Read()
 	if err != nil {
 		return &VaultWithDb{
-			Vault: Vault{
+			Vault: Vault{ 
 				Accounts:  []Account{},
 				UpdatedAt: time.Now(),
 			},
