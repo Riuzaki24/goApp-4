@@ -41,12 +41,6 @@ func getMenu() int {
 	return variant
 }
 
-func promptData(prompt string) string {
-	fmt.Print(prompt + ": ")
-	var result string
-	fmt.Scanln(&result)
-	return result
-}
 
 func createAccount(vault *account.VaultWithDb) {
 	login := promptData("Введите логин")
@@ -57,7 +51,7 @@ func createAccount(vault *account.VaultWithDb) {
 		output.PrintError("Неверный формат URL или Login")
 		return
 	}
-
+	
 	vault.AddAccount(*myAccount)
 }
 
@@ -77,8 +71,16 @@ func deleteAccount(vault *account.VaultWithDb) {
 	isDeleted := vault.DeleteAccountsByUrl(url)
 	if isDeleted {
 		color.Green("удалено")
-	} else {
-		output.PrintError("Не найдено")
+		} else {
+			output.PrintError("Не найдено")
+		}
+		
 	}
-
-}
+	
+	
+	func promptData(prompt string) string {
+		fmt.Print(prompt + ": ")
+		var result string
+		fmt.Scanln(&result)
+		return result
+	}
