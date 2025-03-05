@@ -103,7 +103,7 @@ func (vault *VaultWithDb) save() {
 	vault.UpdatedAt = time.Now()
 	data, err := vault.Vault.ToBytes()
 	if err != nil {
-		output.PrintError("Не удалось преобразовать")
+		output.PrintError(err)
 	}
 	vault.db.Write(data)
 }
