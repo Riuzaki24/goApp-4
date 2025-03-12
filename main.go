@@ -5,6 +5,7 @@ import (
 	"app-4/files"
 	"app-4/output"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/fatih/color"
@@ -25,14 +26,31 @@ var menuVariants = []string {
 			"5. Выход",
 			"Выберите вариант",
 }
+
+func menuCounter() func(){
+	i := 0
+	return func() {
+		i++
+		fmt.Println(i)
+	}
+}
 	
 
 func main() {
 	fmt.Println("Приложение паролей")
+	res := os.Getenv("VAR")
+	fmt.Println(res)
+
+	for _, e := range os.Environ() {
+		pair := strings.SplitN(e, "=", 2)
+		fmt.Println(pair[0])
+	}
+
 	vault := account.NewVault(files.NewJsonDb("data.json"))
 	// vault := account.NewVault(cloud.NewCloudDb("https://a.ru")) 
 Menu:
 	for {
+		
 		variant := promptData(menuVariants...)
 		menuFunc := menu[variant]
 		if menuFunc == nil {
@@ -54,9 +72,9 @@ Menu:
 }
 
 func createAccount(vault *account.VaultWithDb) {
-	login := promptData([]string{"Введите логин"})
-	password := promptData([]string{"Введите пароль"})
-	url := promptData([]string{"Введите URL"})
+	login := promptData("Введите логин")
+	password := promptData("Введите пароль")
+	url := promptData("Введите URL")
 	myAccount, err := account.NewAccount(login, password, url)
 	if err != nil {
 		output.PrintError("Неверный формат URL или Login")
@@ -96,7 +114,7 @@ func outputResult(accounts *[]account.Account) {
 
 
 func deleteAccount(vault *account.VaultWithDb) {
-	url := promptData([]string{"Введите URL для удаления"})
+	url := promptData("Введите URL для удаления")
 	isDeleted := vault.DeleteAccountsByUrl(url)
 	if isDeleted {
 		color.Green("удалено")
