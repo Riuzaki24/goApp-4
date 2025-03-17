@@ -2,13 +2,14 @@ package main
 
 import (
 	"app-4/account"
+	"app-4/encrypter"
 	"app-4/files"
 	"app-4/output"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/joho/godotenv"
 )
 
 var menu = map[string]func(*account.VaultWithDb){
@@ -18,39 +19,34 @@ var menu = map[string]func(*account.VaultWithDb){
 	"4": deleteAccount,
 }
 
-var menuVariants = []string {
-			"1. Создать аккаунт",
-			"2. Найти аккаунт по URL",
-			"3. Найти аккаунт по логину",
-			"4. Удалить аккаунт",
-			"5. Выход",
-			"Выберите вариант",
+var menuVariants = []string{
+	"1. Создать аккаунт",
+	"2. Найти аккаунт по URL",
+	"3. Найти аккаунт по логину",
+	"4. Удалить аккаунт",
+	"5. Выход",
+	"Выберите вариант",
 }
 
-func menuCounter() func(){
+func menuCounter() func() {
 	i := 0
 	return func() {
 		i++
 		fmt.Println(i)
 	}
 }
-	
 
 func main() {
 	fmt.Println("Приложение паролей")
-	res := os.Getenv("VAR")
-	fmt.Println(res)
-
-	for _, e := range os.Environ() {
-		pair := strings.SplitN(e, "=", 2)
-		fmt.Println(pair[0])
+	err := godotenv.Load()
+	if err != nil {
+		output.PrintError("Не удалось найти env файл")
 	}
-
-	vault := account.NewVault(files.NewJsonDb("data.json"))
-	// vault := account.NewVault(cloud.NewCloudDb("https://a.ru")) 
+	vault := account.NewVault(files.NewJsonDb("data.vault"), *encrypter.NewEncrypter())
+	// vault := account.NewVault(cloud.NewCloudDb("https://a.ru"))
 Menu:
 	for {
-		
+
 		variant := promptData(menuVariants...)
 		menuFunc := menu[variant]
 		if menuFunc == nil {
@@ -89,7 +85,7 @@ func findAccountByUrl(vault *account.VaultWithDb) {
 	accounts := vault.FindAccounts(url, func(acc account.Account, str string) bool {
 		return strings.Contains(acc.Url, str)
 	})
-	
+
 	outputResult(&accounts)
 }
 
@@ -98,7 +94,7 @@ func findAccountByLogin(vault *account.VaultWithDb) {
 	accounts := vault.FindAccounts(login, func(acc account.Account, str string) bool {
 		return strings.Contains(acc.Login, str)
 	})
-	
+
 	outputResult(&accounts)
 }
 
@@ -110,8 +106,6 @@ func outputResult(accounts *[]account.Account) {
 		account.Output()
 	}
 }
-
-
 
 func deleteAccount(vault *account.VaultWithDb) {
 	url := promptData("Введите URL для удаления")
